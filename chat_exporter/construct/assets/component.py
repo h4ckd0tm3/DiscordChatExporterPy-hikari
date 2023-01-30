@@ -1,4 +1,4 @@
-from chat_exporter.ext.discord_import import discord
+from chat_exporter.ext.discord_import import hikari
 
 from chat_exporter.ext.discord_utils import DiscordUtils
 from chat_exporter.ext.html_generator import (
@@ -37,9 +37,9 @@ class Component:
         self.guild = guild
 
     async def build_component(self, c):
-        if isinstance(c, discord.Button):
+        if isinstance(c, hikari.component.ButtonComponent):
             await self.build_button(c)
-        elif isinstance(c, discord.SelectMenu):
+        elif isinstance(c, hikari.component.SelectMenuComponent):
             await self.build_menu(c)
             Component.menu_div_id += 1
 

@@ -4,9 +4,9 @@ from typing import Optional
 import pytz
 import datetime
 
-from chat_exporter.ext.discord_import import discord
+from chat_exporter.ext.discord_import import hikari
 
-bot: Optional[discord.Client] = None
+bot: Optional[hikari.GatewayBot] = None
 
 
 def pass_bot(_bot):
@@ -124,7 +124,7 @@ class ParseMention:
                 member = None
                 try:
                     member = self.guild.get_member(member_id) or bot.get_user(member_id)
-                    member_name = member.display_name
+                    member_name = member.username
                 except AttributeError:
                     member_name = member
 

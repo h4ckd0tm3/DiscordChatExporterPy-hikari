@@ -1,8 +1,8 @@
-discord_modules = ['nextcord', 'disnake', 'discord']
+discord_modules = ['hikari']
 for module in discord_modules:
     try:
-        discord = __import__(module)
-        discord.module = module
+        hikari = __import__(module)
+        hikari.module = module
         break
     except ImportError:
         continue

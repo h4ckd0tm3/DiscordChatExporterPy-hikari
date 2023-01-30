@@ -6,7 +6,7 @@ from typing import List, Optional
 
 import pytz
 
-from chat_exporter.ext.discord_import import discord
+from chat_exporter.ext.discord_import import hikari
 
 from chat_exporter.construct.message import gather_messages
 from chat_exporter.construct.assets.component import Component
@@ -24,16 +24,16 @@ class TranscriptDAO:
 
     def __init__(
         self,
-        channel: discord.TextChannel,
+        channel: hikari.channels.PartialChannel,
         limit: Optional[int],
-        messages: Optional[List[discord.Message]],
+        messages: Optional[List[hikari.messages.Message]],
         pytz_timezone,
         military_time: bool,
         fancy_times: bool,
-        before: Optional[datetime.datetime],
-        after: Optional[datetime.datetime],
+        before: hikari.undefined.UndefinedOr[hikari.snowflakes.SearchableSnowflakeishOr[hikari.snowflakes.Unique]],
+        after: hikari.undefined.UndefinedOr[hikari.snowflakes.SearchableSnowflakeishOr[hikari.snowflakes.Unique]],
+        bot: Optional[hikari.GatewayBot],
         support_dev: bool,
-        bot: Optional[discord.Client],
     ):
         self.channel = channel
         self.messages = messages
@@ -46,7 +46,7 @@ class TranscriptDAO:
         self.pytz_timezone = pytz_timezone
 
         # This is to pass timezone in to mention.py without rewriting
-        setattr(discord.Guild, "timezone", self.pytz_timezone)
+        setattr(hikari.guilds.Guild, "timezone", self.pytz_timezone)
 
         if bot:
             pass_bot(bot)
@@ -54,7 +54,7 @@ class TranscriptDAO:
     async def build_transcript(self):
         message_html, meta_data = await gather_messages(
             self.messages,
-            self.channel.guild,
+            self.channel.get_guild(),
             self.pytz_timezone,
             self.military_time,
         )
@@ -64,11 +64,12 @@ class TranscriptDAO:
         return self
 
     async def export_transcript(self, message_html: str, meta_data: str):
-        guild_icon = self.channel.guild.icon if (
-                self.channel.guild.icon and len(self.channel.guild.icon) > 2
+        guild = self.channel.get_guild()
+        guild_icon = guild.icon_url if (
+                guild.icon_url and len(guild.icon_url) > 2
         ) else DiscordUtils.default_avatar
 
-        guild_name = html.escape(self.channel.guild.name)
+        guild_name = html.escape(guild.name)
 
         timezone = pytz.timezone(self.pytz_timezone)
         time_now = datetime.datetime.now(timezone).strftime("%e %B %Y at %T (%Z)")
@@ -81,7 +82,7 @@ class TranscriptDAO:
                 if meta_data[int(data)][5] else "Unknown"
             )
 
-            meta_data_html += await fill_out(self.channel.guild, meta_data_temp, [
+            meta_data_html += await fill_out(guild, meta_data_temp, [
                 ("USER_ID", str(data), PARSE_MODE_NONE),
                 ("USERNAME", str(meta_data[int(data)][0][:-5]), PARSE_MODE_NONE),
                 ("DISCRIMINATOR", str(meta_data[int(data)][0][-5:])),
@@ -102,7 +103,7 @@ class TranscriptDAO:
 
         channel_topic_html = ""
         if raw_channel_topic:
-            channel_topic_html = await fill_out(self.channel.guild, channel_topic, [
+            channel_topic_html = await fill_out(guild, channel_topic, [
                 ("CHANNEL_TOPIC", raw_channel_topic)
             ])
 
@@ -110,7 +111,7 @@ class TranscriptDAO:
         if self.limit:
             limit = f"latest {self.limit} messages"
 
-        subject = await fill_out(self.channel.guild, channel_subject, [
+        subject = await fill_out(guild, channel_subject, [
             ("LIMIT", limit, PARSE_MODE_NONE),
             ("CHANNEL_NAME", self.channel.name),
             ("RAW_CHANNEL_TOPIC", str(raw_channel_topic))
@@ -125,13 +126,13 @@ class TranscriptDAO:
         _fancy_time = ""
 
         if self.fancy_times:
-            _fancy_time = await fill_out(self.channel.guild, fancy_time, [
+            _fancy_time = await fill_out(guild, fancy_time, [
                 ("TIMEZONE", str(self.pytz_timezone), PARSE_MODE_NONE)
             ])
 
-        self.html = await fill_out(self.channel.guild, total, [
+        self.html = await fill_out(guild, total, [
             ("SERVER_NAME", f"{guild_name}"),
-            ("GUILD_ID", str(self.channel.guild.id), PARSE_MODE_NONE),
+            ("GUILD_ID", str(self.channel.guild_id), PARSE_MODE_NONE),
             ("SERVER_AVATAR_URL", str(guild_icon), PARSE_MODE_NONE),
             ("CHANNEL_NAME", f"{self.channel.name}"),
             ("MESSAGE_COUNT", str(len(self.messages))),
@@ -151,11 +152,7 @@ class TranscriptDAO:
 class Transcript(TranscriptDAO):
     async def export(self):
         if not self.messages:
-            self.messages = [message async for message in self.channel.history(
-                limit=self.limit,
-                before=self.before,
-                after=self.after,
-            )]
+            self.messages = [message async for message in self.channel.fetch_history(before=self.before, after=self.after)]
 
         if not self.after:
             self.messages.reverse()
@@ -165,5 +162,5 @@ class Transcript(TranscriptDAO):
         except Exception:
             self.html = "Whoops! Something went wrong..."
             traceback.print_exc()
-            print("Please send a screenshot of the above error to https://www.github.com/mahtoid/DiscordChatExporterPy")
+            print("Please send a screenshot of the above error to https://www.github.com/h4ckd0tm3/DiscordChatExporterPy-hikari")
             return self

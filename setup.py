@@ -5,14 +5,14 @@ this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
 
 setup(
-    name="chat_exporter",
+    name="chat_exporter_hikari",
     version="2.5.1",
-    author="mahtoid",
-    author_email="info@mahto.id",
+    author="h4ckd0tm3",
+    author_email="marcel@schnideritsch.at",
     description="A simple Discord chat exporter for Python Discord bots.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/mahtoid/DiscordChatExporterPy",
+    url="https://github.com/h4ckd0tm3/DiscordChatExporterPy-hikari",
     packages=find_packages(),
     package_data={'': [r'chat_exporter/html/*.html']},
     include_package_data=True,

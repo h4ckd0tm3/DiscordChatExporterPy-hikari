@@ -21,12 +21,12 @@ class Attachment:
         return self.attachments
 
     async def build_attachment(self):
-        if self.attachments.content_type is not None:
-            if "image" in self.attachments.content_type:
+        if self.attachments.media_type is not None:
+            if "image" in self.attachments.media_type:
                 return await self.image()
-            elif "video" in self.attachments.content_type:
+            elif "video" in self.attachments.media_type:
                 return await self.video()
-            elif "audio" in self.attachments.content_type:
+            elif "audio" in self.attachments.media_type:
                 return await self.audio()
         await self.file()
 
