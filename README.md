@@ -274,8 +274,8 @@ It simply makes a request to the given URL and echos (prints) the content for yo
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- LINK DUMP -->
-[pypi-version]: https://img.shields.io/pypi/v/chat-exporter?style=for-the-badge
-[pypi-url]: https://pypi.org/project/chat-exporter/
+[pypi-version]: https://img.shields.io/pypi/v/chat-exporter-hikari?style=for-the-badge
+[pypi-url]: https://pypi.org/project/chat-exporter-hikari/
 [language-dom]: https://img.shields.io/github/languages/top/h4ckd0tm3/DiscordChatExporterPy-hikari?style=for-the-badge
 [forks-shield]: https://img.shields.io/github/forks/h4ckd0tm3/DiscordChatExporterPy-hikari?style=for-the-badge
 [forks-url]: https://github.com/h4ckd0tm3/DiscordChatExporterPy-hikari/
