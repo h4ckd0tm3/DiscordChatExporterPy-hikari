@@ -137,17 +137,10 @@ class MessageConstruct:
 
     async def build_reference(self):
         if not self.message.referenced_message:
-            self.message.referenced_message = ""
+            self.message.referenced_message = None
             return
 
-        try:
-            message: hikari.messages.Message = await self.message.channel.fetch_message(
-                self.message.referenced_message.message_id)
-        except (hikari.errors.NotFoundError, hikari.errors.HTTPError) as e:
-            self.message.referenced_message = ""
-            if isinstance(e, hikari.errors.NotFoundError):
-                self.message.referenced_message = message_reference_unknown
-            return
+        message = self.message.referenced_message
 
         is_bot = _gather_user_bot(message.author)
         user_colour = await self._gather_user_colour(message.author)
@@ -179,7 +172,7 @@ class MessageConstruct:
             ("EDIT", message_edited_timestamp, PARSE_MODE_NONE),
             ("ICON", icon, PARSE_MODE_NONE),
             ("USER_ID", str(message.author.id), PARSE_MODE_NONE),
-            ("MESSAGE_ID", str(self.message.referenced_message.message_id), PARSE_MODE_NONE),
+            ("MESSAGE_ID", str(self.message.referenced_message.id), PARSE_MODE_NONE),
         ])
 
     async def build_interaction(self):
