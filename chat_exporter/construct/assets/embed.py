@@ -94,7 +94,7 @@ class Embed:
             field.name = html.escape(field.name)
             field.value = html.escape(field.value)
 
-            if field.inline:
+            if field.is_inline:
                 self.fields += await fill_out(self.guild, embed_field_inline, [
                     ("FIELD_NAME", field.name, PARSE_MODE_SPECIAL_EMBED),
                     ("FIELD_VALUE", field.value, PARSE_MODE_EMBED)

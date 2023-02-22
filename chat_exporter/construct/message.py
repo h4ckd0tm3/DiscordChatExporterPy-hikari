@@ -142,6 +142,9 @@ class MessageConstruct:
 
         message = self.message.referenced_message
 
+        guild_member = await self._gather_member(self.message.author)
+        display_name = guild_member.display_name if guild_member else self.message.author.username
+
         is_bot = _gather_user_bot(message.author)
         user_colour = await self._gather_user_colour(message.author)
 
@@ -166,7 +169,7 @@ class MessageConstruct:
             ("AVATAR_URL", str(avatar_url), PARSE_MODE_NONE),
             ("BOT_TAG", is_bot, PARSE_MODE_NONE),
             ("NAME_TAG", "%s#%s" % (message.author.username, message.author.discriminator), PARSE_MODE_NONE),
-            ("NAME", str(html.escape(message.author.username))),
+            ("NAME", str(html.escape(display_name))),
             ("USER_COLOUR", user_colour, PARSE_MODE_NONE),
             ("CONTENT", message.content, PARSE_MODE_REFERENCE),
             ("EDIT", message_edited_timestamp, PARSE_MODE_NONE),

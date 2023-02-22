@@ -66,7 +66,7 @@ class TranscriptDAO:
     async def export_transcript(self, message_html: str, meta_data: str):
         guild = self.channel.get_guild()
         guild_icon = guild.icon_url if (
-                guild.icon_url and len(guild.icon_url) > 2
+                guild.icon_url
         ) else DiscordUtils.default_avatar
 
         guild_name = html.escape(guild.name)
