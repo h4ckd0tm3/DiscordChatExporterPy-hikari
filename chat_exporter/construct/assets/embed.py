@@ -113,7 +113,7 @@ class Embed:
 
         author_icon = await fill_out(self.guild, embed_author_icon, [
             ("AUTHOR", self.author, PARSE_MODE_NONE),
-            ("AUTHOR_ICON", self.embed.author.icon_url, PARSE_MODE_NONE)
+            ("AUTHOR_ICON", self.embed.author.icon.proxy_url, PARSE_MODE_NONE)
         ]) if self.embed.author != self.check_against.author else ""
 
         if author_icon == "" and self.author != "":
