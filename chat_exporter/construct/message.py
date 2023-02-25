@@ -142,7 +142,7 @@ class MessageConstruct:
 
         message = self.message.referenced_message
 
-        guild_member = await self._gather_member(self.message.author)
+        guild_member = await self._gather_member(message.author)
         display_name = guild_member.display_name if guild_member else self.message.author.username
 
         is_bot = _gather_user_bot(message.author)
