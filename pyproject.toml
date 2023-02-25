@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "chat_exporter_hikari"
 description = "A simple Discord chat exporter for Python Discord bots."
-version = "2.5.5"
+version = "2.5.6"
 readme = "README.md"
 authors = [
     { name="h4ckd0tm3", email="marcel@schnideritsch.at" }
