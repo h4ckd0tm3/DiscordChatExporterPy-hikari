@@ -104,10 +104,10 @@ class ParseMention:
                 if role is None:
                     replacement = '@deleted-role'
                 else:
-                    if role.color.r == 0 and role.color.g == 0 and role.color.b == 0:
+                    if role.color.rgb == (0, 0, 0):
                         colour = "#dee0fc"
                     else:
-                        colour = "#%02x%02x%02x" % (role.color.r, role.color.g, role.color.b)
+                        colour = "#%02x%02x%02x" % role.color.rgb
                     replacement = '<span style="color: %s;">@%s</span>' \
                                   % (colour, role.name)
                 self.content = self.content.replace(self.content[match.start():match.end()], replacement)
