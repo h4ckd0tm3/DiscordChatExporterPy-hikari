@@ -113,8 +113,8 @@ class Embed:
 
         author_icon = await fill_out(self.guild, embed_author_icon, [
             ("AUTHOR", self.author, PARSE_MODE_NONE),
-            ("AUTHOR_ICON", self.embed.author.icon.proxy_url if self.embed.author.icon else "", PARSE_MODE_NONE)
-        ]) if self.embed.author else ""
+            ("AUTHOR_ICON", self.embed.author.icon.proxy_url, PARSE_MODE_NONE)
+        ]) if self.embed.author and self.embed.author.icon else ""
 
         if author_icon == "" and self.author != "":
             self.author = await fill_out(self.guild, embed_author, [("AUTHOR", self.author, PARSE_MODE_NONE)])
